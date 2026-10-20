@@ -1,0 +1,641 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f7fc">
+<title>Language Instincts Quiz — Kids Edition</title>
+<style>
+  :root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: #18243b;
+    background: #f5f7fc;
+  }
+
+  * { box-sizing: border-box; }
+
+  body { margin: 0; }
+
+  .container {
+    width: min(100% - 32px, 640px);
+    margin: 42px auto;
+  }
+
+  .eyebrow {
+    color: #386fe0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: clamp(27px, 5vw, 36px);
+    letter-spacing: -.04em;
+    margin: 12px 0;
+  }
+
+  h2 {
+    font-size: 22px;
+    line-height: 1.45;
+    letter-spacing: -.02em;
+  }
+
+  p {
+    color: #64718a;
+    line-height: 1.7;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid #e5eaf3;
+    border-radius: 20px;
+    padding: 28px;
+    margin-top: 24px;
+    box-shadow: 0 8px 30px #1b33500b;
+  }
+
+  .progress-info, .result-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-weight: 600;
+  }
+
+  .progress-info {
+    color: #64718a;
+    font-size: 14px;
+  }
+
+  .progress, .result-track {
+    background: #e9eef8;
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .progress {
+    height: 8px;
+    margin: 15px 0 28px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0;
+    background: #386fe0;
+    transition: width .2s;
+  }
+
+  .choices {
+    display: grid;
+    gap: 11px;
+    margin-top: 24px;
+  }
+
+  .choice {
+    width: 100%;
+    text-align: left;
+    padding: 16px 18px;
+    background: #fafbfe;
+    border: 1px solid #dfe6f2;
+    border-radius: 12px;
+    color: #18243b;
+    font: inherit;
+    font-size: 17px;
+    cursor: pointer;
+  }
+
+  .choice:hover {
+    border-color: #386fe0;
+    background: #eef4ff;
+  }
+
+  .choice.selected {
+    background: #eaf1ff;
+    border-color: #386fe0;
+    box-shadow: 0 0 0 1px #386fe0;
+  }
+
+  .response-input {
+    width: 100%;
+    min-height: 125px;
+    resize: vertical;
+    margin-top: 14px;
+    padding: 15px;
+    border: 1px solid #dfe6f2;
+    border-radius: 12px;
+    background: #fafbfe;
+    color: #18243b;
+    font: inherit;
+    font-size: 17px;
+    line-height: 1.6;
+    outline: none;
+  }
+
+  .response-input:focus {
+    border-color: #386fe0;
+    box-shadow: 0 0 0 3px #386fe01c;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 650;
+    margin-top: 22px;
+  }
+
+  .helper {
+    font-size: 13px;
+    margin: 7px 0;
+  }
+
+  .navigation {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  button { font-family: inherit; }
+
+  .btn {
+    padding: 14px 18px;
+    border: 1px solid #dfe6f2;
+    border-radius: 12px;
+    background: white;
+    color: #243551;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn.primary {
+    flex: 1;
+    background: #386fe0;
+    color: white;
+    border-color: #386fe0;
+  }
+
+  .btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+  }
+
+  .result-item { margin: 24px 0; }
+
+  .result-heading { margin-bottom: 10px; }
+
+  .result-track { height: 13px; }
+
+  .result-fill {
+    height: 100%;
+    border-radius: inherit;
+  }
+
+  .summary {
+    padding: 18px;
+    background: #f4f7fc;
+    border-radius: 12px;
+    margin-top: 25px;
+    line-height: 1.7;
+  }
+
+  .summary p { margin: 0; }
+
+  .response-review {
+    padding: 14px 0;
+    border-bottom: 1px solid #e9eef8;
+  }
+
+  .response-review:last-child { border-bottom: 0; }
+
+  .response-review strong {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .response-review p {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 5px 0;
+  }
+
+  .hidden { display: none !important; }
+
+  footer {
+    margin: 25px 0;
+    text-align: center;
+    color: #8994a8;
+    font-size: 13px;
+  }
+
+  @media (max-width: 480px) {
+    .container { margin: 24px auto; }
+    .card { padding: 20px; }
+    .navigation { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<main class="container">
+  <div class="eyebrow">Kids Edition</div>
+  <h1>Language Instincts Quiz</h1>
+  <p>
+    Which language pops into your head first?
+    Some questions ask you to choose a language.
+    Others ask you to write what you'd actually say.
+    There are no right or wrong answers!
+  </p>
+
+  <section class="card" id="quiz">
+    <div class="progress-info">
+      <span id="questionNumber"></span>
+      <span id="progressPercent"></span>
+    </div>
+
+    <div class="progress">
+      <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <div class="eyebrow" id="questionType"></div>
+    <h2 id="questionText"></h2>
+
+    <div id="multipleChoice" class="choices"></div>
+
+    <div id="textAnswer" class="hidden">
+      <label class="field-label" for="responseInput">
+        What would you say or think?
+      </label>
+      <textarea
+        id="responseInput"
+        class="response-input"
+        placeholder="Write your first natural reaction..."
+        maxlength="500"
+      ></textarea>
+
+      <p class="helper">
+        You can write in English, ไทย, or 中文.
+      </p>
+
+      <div class="field-label">
+        Which language did you use?
+      </div>
+      <div id="textLanguageChoices" class="choices"></div>
+    </div>
+
+    <div class="navigation">
+      <button class="btn" id="backBtn" type="button">
+        Previous
+      </button>
+      <button class="btn primary" id="nextBtn" type="button">
+        Next question
+      </button>
+    </div>
+  </section>
+
+  <section class="card hidden" id="results">
+    <div class="eyebrow">Your Results</div>
+    <h2>Your Language Instincts</h2>
+    <p>Here's how often you chose each language.</p>
+
+    <div id="resultBars"></div>
+
+    <div class="summary">
+      <p id="summaryText"></p>
+    </div>
+
+    <h2>Your Written Responses</h2>
+    <div id="writtenResponses"></div>
+
+    <div class="navigation">
+      <button class="btn" id="restartBtn" type="button">
+        Try again
+      </button>
+      <button class="btn primary" id="shareBtn" type="button">
+        Share results
+      </button>
+    </div>
+  </section>
+
+  <footer>Language Instincts Quiz · Kids Edition</footer>
+</main>
+
+<script>
+const questions = [
+  {
+    type: "choice",
+    text: "Your teacher announces a surprise test. What language comes to mind first?"
+  },
+  {
+    type: "text",
+    text: "You open your lunchbox and find your favorite food. What is the first thing you say?"
+  },
+  {
+    type: "choice",
+    text: "Your best friend says they're moving to another school. What language do you first think in?"
+  },
+  {
+    type: "text",
+    text: "You accidentally spill water on your homework. What do you immediately say?"
+  },
+  {
+    type: "choice",
+    text: "You're solving a difficult math problem. What language do you think in?"
+  },
+  {
+    type: "text",
+    text: "You wake up late for school. What is your first reaction?"
+  },
+  {
+    type: "choice",
+    text: "Someone cuts in front of you in a line. What language comes to mind?"
+  },
+  {
+    type: "text",
+    text: "Your teacher cancels today's homework. What do you say?"
+  },
+  {
+    type: "choice",
+    text: "You're imagining yourself in an adventure story. What language do you think in?"
+  },
+  {
+    type: "text",
+    text: "You win a difficult competition. What do you shout or think?"
+  }
+];
+
+const languages = [
+  { id: "en", name: "English", color: "#386fe0" },
+  { id: "th", name: "ไทย", color: "#21a18b" },
+  { id: "zh", name: "中文", color: "#e5a342" }
+];
+
+let current = 0;
+let answers = questions.map(() => ({
+  language: null,
+  response: ""
+}));
+
+const $ = id => document.getElementById(id);
+
+function makeLanguageButtons(containerId) {
+  const container = $(containerId);
+  container.replaceChildren();
+
+  languages.forEach(language => {
+    const selected = answers[current].language === language.id;
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "choice" + (selected ? " selected" : "");
+    button.textContent = language.name;
+    button.setAttribute("aria-pressed", String(selected));
+
+    button.addEventListener("click", () => {
+      answers[current].language = language.id;
+      renderQuestion();
+    });
+
+    container.appendChild(button);
+  });
+}
+
+function isCurrentValid() {
+  const question = questions[current];
+  const answer = answers[current];
+
+  if (!answer.language) return false;
+
+  if (question.type === "text") {
+    return answer.response.trim().length > 0;
+  }
+
+  return true;
+}
+
+function updateNextButton() {
+  $("nextBtn").disabled = !isCurrentValid();
+}
+
+function renderQuestion() {
+  const question = questions[current];
+  const total = questions.length;
+  const percent = Math.round((current / total) * 100);
+
+  $("questionNumber").textContent =
+    `Question ${current + 1} of ${total}`;
+
+  $("progressPercent").textContent = `${percent}%`;
+  $("progressBar").style.width = `${percent}%`;
+  $("questionText").textContent = question.text;
+
+  $("questionType").textContent =
+    question.type === "text" ? "Written Response" : "Choose a Language";
+
+  $("multipleChoice").classList.toggle(
+    "hidden", question.type !== "choice"
+  );
+
+  $("textAnswer").classList.toggle(
+    "hidden", question.type !== "text"
+  );
+
+  if (question.type === "choice") {
+    makeLanguageButtons("multipleChoice");
+  } else {
+    $("responseInput").value = answers[current].response;
+    makeLanguageButtons("textLanguageChoices");
+  }
+
+  $("backBtn").disabled = current === 0;
+  $("nextBtn").textContent =
+    current === total - 1 ? "See my results" : "Next question";
+
+  updateNextButton();
+}
+
+function getCounts() {
+  return languages.map(language => ({
+    ...language,
+    count: answers.filter(
+      answer => answer.language === language.id
+    ).length
+  }));
+}
+
+function showResults() {
+  $("quiz").classList.add("hidden");
+  $("results").classList.remove("hidden");
+
+  const counts = getCounts();
+  $("resultBars").replaceChildren();
+
+  counts.forEach(language => {
+    const percent = Math.round(
+      language.count / questions.length * 100
+    );
+
+    const item = document.createElement("div");
+    item.className = "result-item";
+
+    const heading = document.createElement("div");
+    heading.className = "result-heading";
+
+    const name = document.createElement("span");
+    name.textContent = language.name;
+
+    const value = document.createElement("span");
+    value.textContent =
+      `${percent}% (${language.count}/${questions.length})`;
+
+    heading.append(name, value);
+
+    const track = document.createElement("div");
+    track.className = "result-track";
+
+    const fill = document.createElement("div");
+    fill.className = "result-fill";
+    fill.style.width = `${percent}%`;
+    fill.style.background = language.color;
+
+    track.appendChild(fill);
+    item.append(heading, track);
+    $("resultBars").appendChild(item);
+  });
+
+  const highest = Math.max(...counts.map(l => l.count));
+  const winners = counts.filter(l => l.count === highest);
+
+  $("summaryText").textContent =
+    winners.length === 1
+      ? `You chose ${winners[0].name} most often. ` +
+        "That language may come to mind more naturally " +
+        "in these situations."
+      : "You chose multiple languages equally often. " +
+        "Your language instincts may depend on the situation.";
+
+  $("summaryText").textContent +=
+    " This quiz is for fun and does not measure language ability.";
+
+  const review = $("writtenResponses");
+  review.replaceChildren();
+
+  questions.forEach((question, index) => {
+    if (question.type !== "text") return;
+
+    const item = document.createElement("div");
+    item.className = "response-review";
+
+    const heading = document.createElement("strong");
+    heading.textContent = `Question ${index + 1}`;
+
+    const response = document.createElement("p");
+    response.textContent = answers[index].response;
+
+    const language = document.createElement("p");
+    const match = languages.find(
+      l => l.id === answers[index].language
+    );
+    language.textContent = `Language: ${match.name}`;
+
+    item.append(heading, response, language);
+    review.appendChild(item);
+  });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function restart() {
+  current = 0;
+  answers = questions.map(() => ({
+    language: null,
+    response: ""
+  }));
+
+  $("results").classList.add("hidden");
+  $("quiz").classList.remove("hidden");
+
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function buildShareText() {
+  const counts = getCounts();
+
+  let text = "Language Instincts Quiz — Kids Edition\n\n";
+
+  counts.forEach(language => {
+    text += `${language.name}: ${language.count * 10}%\n`;
+  });
+
+  text += "\nWritten responses:\n";
+
+  questions.forEach((question, index) => {
+    if (question.type !== "text") return;
+
+    const answer = answers[index];
+    const language = languages.find(
+      l => l.id === answer.language
+    );
+
+    text += `\n${index + 1}. ${question.text}\n`;
+    text += `Answer: ${answer.response}\n`;
+    text += `Language: ${language.name}\n`;
+  });
+
+  return text;
+}
+
+async function shareResults() {
+  const text = buildShareText();
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Language Instincts Quiz Results",
+        text
+      });
+      return;
+    } catch (error) {
+      if (error.name === "AbortError") return;
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("Results copied to clipboard!");
+  } catch {
+    window.prompt("Copy your results:", text);
+  }
+}
+
+$("responseInput").addEventListener("input", event => {
+  answers[current].response = event.target.value;
+  updateNextButton();
+});
+
+$("backBtn").addEventListener("click", () => {
+  if (current > 0) {
+    current--;
+    renderQuestion();
+  }
+});
+
+$("nextBtn").addEventListener("click", () => {
+  if (!isCurrentValid()) return;
+
+  if (current === questions.length - 1) {
+    showResults();
+  } else {
+    current++;
+    renderQuestion();
+  }
+});
+
+$("restartBtn").addEventListener("click", restart);
+$("shareBtn").addEventListener("click", shareResults);
+
+renderQuestion();
+</script>
+</body>
+</html>
